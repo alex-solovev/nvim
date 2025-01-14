@@ -13,8 +13,6 @@ require("oil").setup({
 })
 
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-vim.keymap.set("n", "gd", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-vim.keymap.set("n", "<Esc>", "<C-l>", { desc = "Clear" })
 
 -- Basic formatting and line numbers
 vim.opt.shiftwidth = 4
