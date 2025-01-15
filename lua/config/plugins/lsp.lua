@@ -1,6 +1,25 @@
 return {
   {
     'neovim/nvim-lspconfig',
+
+    dependencies = {
+      {
+        'folke/lazydev.nvim',
+        ft = 'lua', -- only load on lua files
+        opts = {
+          library = {
+            -- See the configuration section for more details
+            -- Load luvit types when the `vim.uv` word is found
+            { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+          },
+        },
+      },
+      -- Allows extra capabilities provided by nvim-cmp
+      'hrsh7th/cmp-nvim-lsp',
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+    },
+
     config = function()
       require('mason').setup()
       require('mason-lspconfig').setup()
@@ -47,24 +66,8 @@ return {
           end
         end,
       })
-    end,
 
-    dependencies = {
-      {
-        'folke/lazydev.nvim',
-        ft = 'lua', -- only load on lua files
-        opts = {
-          library = {
-            -- See the configuration section for more details
-            -- Load luvit types when the `vim.uv` word is found
-            { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-          },
-        },
-      },
-      -- Allows extra capabilities provided by nvim-cmp
-      'hrsh7th/cmp-nvim-lsp',
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
-    }
+      vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+    end
   }
 }
