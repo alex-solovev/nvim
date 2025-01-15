@@ -2,7 +2,6 @@
 vim.hl = vim.highlight
 
 require('config.lazy')
-
 require('oil').setup({
   columns = {
     'icon',
@@ -21,6 +20,3 @@ vim.opt.relativenumber = true
 
 -- Enable paste from clipboard
 vim.opt.clipboard = 'unnamedplus'
-
-
-print('Ready to rock!')

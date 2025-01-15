@@ -2,12 +2,23 @@ return {
   {
     'neovim/nvim-lspconfig',
     config = function()
-      require('lspconfig').lua_ls.setup({})
+      require('lspconfig').lua_ls.setup({
+        settings = {
+          Lua = {
+            completion = {
+              callSnippet = "Replace"
+            }
+          }
+        }
+      })
 
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if not client then return end
+
+          local capabilities = vim.lsp.protocol.make_client_capabilities()
+          capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
           if client.supports_method('textDocument/formatting') then
             vim.api.nvim_create_autocmd('BufWritePre', {
@@ -20,6 +31,7 @@ return {
         end,
       })
     end,
+
     dependencies = {
       {
         'folke/lazydev.nvim',
@@ -32,6 +44,8 @@ return {
           },
         },
       },
+      -- Allows extra capabilities provided by nvim-cmp
+      'hrsh7th/cmp-nvim-lsp',
     }
   }
 }
