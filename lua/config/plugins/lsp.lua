@@ -1,8 +1,8 @@
 return {
   {
-    "neovim/nvim-lspconfig",
+    'neovim/nvim-lspconfig',
     config = function()
-      require("lspconfig").lua_ls.setup({})
+      require('lspconfig').lua_ls.setup({})
 
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
@@ -10,7 +10,7 @@ return {
           if not client then return end
 
           if client.supports_method('textDocument/formatting') then
-            vim.api.nvim_create_autocmd("BufWritePre", {
+            vim.api.nvim_create_autocmd('BufWritePre', {
               buffer = args.buf,
               callback = function()
                 vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
@@ -22,13 +22,13 @@ return {
     end,
     dependencies = {
       {
-        "folke/lazydev.nvim",
-        ft = "lua", -- only load on lua files
+        'folke/lazydev.nvim',
+        ft = 'lua', -- only load on lua files
         opts = {
           library = {
             -- See the configuration section for more details
             -- Load luvit types when the `vim.uv` word is found
-            { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
           },
         },
       },
