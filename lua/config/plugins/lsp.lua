@@ -29,6 +29,8 @@ return {
 
       local lspconfig = require('lspconfig')
 
+      lspconfig.ts_ls.setup({ capabilities = capabilities })
+
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
         settings = {
@@ -55,6 +57,8 @@ return {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if not client then return end
+
+          client.capabilities = capabilities
 
           if client.supports_method('textDocument/formatting') then
             vim.api.nvim_create_autocmd('BufWritePre', {
