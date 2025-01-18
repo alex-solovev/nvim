@@ -3,55 +3,50 @@ return {
     'neovim/nvim-lspconfig',
 
     dependencies = {
-      {
-        'folke/lazydev.nvim',
-        ft = 'lua', -- only load on lua files
-        opts = {
-          library = {
-            -- See the configuration section for more details
-            -- Load luvit types when the `vim.uv` word is found
-            { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-          },
-        },
-      },
+      -- Mason must be configured before LSP plugin
+      { "williamboman/mason.nvim", opts = {} },
+      "williamboman/mason-lspconfig.nvim",
       -- Allows extra capabilities provided by nvim-cmp
       'hrsh7th/cmp-nvim-lsp',
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
     },
 
     config = function()
-      require('mason').setup()
-      require('mason-lspconfig').setup()
-
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
       local lspconfig = require('lspconfig')
 
-      lspconfig.ts_ls.setup({ capabilities = capabilities })
+      local servers = {
+        ts_ls = {
+          settings = {
+            typescript = {
+              suggest = {
+                completeFunctionCalls = true
+              }
+            }
+          }
+        },
 
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            completion = {
-              callSnippet = "Replace"
+        lua_ls = {
+          settings = {
+            Lua = {
+              completion = {
+                callSnippet = "Replace"
+              }
+            }
+          }
+        },
+
+        gopls = {
+          settings = {
+            gopls = {
+              usePlaceholders = true,
+              completeUnimported = true,
+              experimentalPostfixCompletions = true,
             }
           }
         }
-      })
-
-      lspconfig.gopls.setup({
-        capabilities = capabilities,
-        settings = {
-          gopls = {
-            usePlaceholders = true,
-            completeUnimported = true,
-            experimentalPostfixCompletions = true,
-          }
-        }
-      })
+      }
 
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
@@ -72,6 +67,18 @@ return {
       })
 
       vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+
+      require('mason-lspconfig').setup({
+        ensure_installed = {},
+        automatic_installation = false,
+        handlers = {
+          function(server_name)
+            local server = servers[server_name] or {}
+            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+            require('lspconfig')[server_name].setup(server)
+          end,
+        },
+      })
     end
   }
 }
