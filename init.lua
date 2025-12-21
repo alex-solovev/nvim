@@ -1,6 +1,6 @@
 -- Fix for https://github.com/neovim/neovim/issues/31675
 vim.hl = vim.highlight
-require('config.lazy')
+require("config.lazy")
 
 -- Basic formatting and line numbers
 vim.opt.shiftwidth = 4
@@ -9,7 +9,7 @@ vim.opt.relativenumber = true
 
 -- Enable paste from clipboard
 vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
+  vim.opt.clipboard = "unnamedplus"
 end)
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
@@ -30,13 +30,13 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 30
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Highlight on copy
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+vim.api.nvim_create_autocmd("TextYankPost", {
+  desc = "Highlight when yanking (copying) text",
+  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
   callback = function()
     vim.hl.on_yank()
-  end
+  end,
 })
