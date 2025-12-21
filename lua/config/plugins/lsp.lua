@@ -17,7 +17,7 @@ return {
       local lspconfig = require('lspconfig')
 
       local servers = {
-        ts_ls = {
+        ts_ls                       = {
           settings = {
             typescript = {
               suggest = {
@@ -27,7 +27,11 @@ return {
           }
         },
 
-        lua_ls = {
+        svelteserver                = {},
+
+        tailwindcss_language_server = {},
+
+        lua_ls                      = {
           settings = {
             Lua = {
               completion = {
@@ -37,7 +41,7 @@ return {
           }
         },
 
-        gopls = {
+        gopls                       = {
           settings = {
             gopls = {
               usePlaceholders = true,
@@ -63,10 +67,24 @@ return {
               end
             })
           end
+
+          local function set(mode, keys, func, desc)
+            vim.keymap.set(mode, keys, func, { buffer = args.buf, desc = 'LSP: ' .. desc })
+          end
+
+          set("n", "gd", vim.lsp.buf.definition, "Go to definition")
+          set("n", "grn", vim.lsp.buf.rename, "[R]e[n]ame")
+          set("n", "gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction")
+          set("n", "grr", require('telescope.builtin').lsp_references, "[G]oto [R]eferences")
+          set("n", "gri", require('telescope.builtin').lsp_implementations, "[G]oto [I]mplementation")
+          set("n", "grd", require('telescope.builtin').lsp_definitions, "[G]oto [D]efinition")
+          set("n", "grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+          set("n", "gO", require('telescope.builtin').lsp_document_symbols, "Open Document Symbols")
+          set("n", "gW", require('telescope.builtin').lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
+          set("n", "grt", require('telescope.builtin').lsp_type_definitions, "[G]oto [T]ype Definition")
         end,
       })
 
-      vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 
       require('mason-lspconfig').setup({
         ensure_installed = {},
