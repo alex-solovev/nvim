@@ -1,9 +1,9 @@
 return {
   {
-    'folke/tokyonight.nvim',
+    "folke/tokyonight.nvim",
     enabled = false,
     lazy = false,
     priority = 1000,
     opts = {},
-  }
+  },
 }
