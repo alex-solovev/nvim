@@ -7,7 +7,7 @@ return {
         lua = { "stylua" },
         javascript = { "prettier", stop_after_first = true },
         typescript = { "prettier", stop_after_first = true },
-        svelte = { "prettier", stop_after_first = true },
+        -- svelte = { "prettier", stop_after_first = true },
       },
     })
 

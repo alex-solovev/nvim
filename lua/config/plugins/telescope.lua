@@ -40,7 +40,7 @@ return {
 
       set("n", "<space>fh", builtin.help_tags, { desc = "Show help tags" })
       set("n", "<space>ff", builtin.find_files, { desc = "Find project files" })
-      set("n", "<space>fg", builtin.git_files, { desc = "Find GIT files" })
+      set("n", "<space><space>", builtin.git_files, { desc = "Find GIT files" })
       set("n", "<space>en", edit_nvim_config, { desc = "Edit NeoVim config" })
 
       -- Slightly advanced example of overriding default behavior and theme
