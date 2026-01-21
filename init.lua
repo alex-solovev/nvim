@@ -40,3 +40,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.hl.on_yank()
   end,
 })
+
+vim.keymap.set("n", "<leader>td", function()
+  local config = vim.diagnostic.config().virtual_lines
+  vim.diagnostic.config({ virtual_lines = not config })
+end, { desc = "Toggle diagnostics" })
