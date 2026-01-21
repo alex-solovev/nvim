@@ -43,6 +43,9 @@ return {
       set("n", "<space><space>", builtin.git_files, { desc = "Find GIT files" })
       set("n", "<space>en", edit_nvim_config, { desc = "Edit NeoVim config" })
 
+      set("n", "<C-j>", "<cmd>cnext<CR>", { desc = "Quickfix next" })
+      set("n", "<C-k>", "<cmd>cprev<CR>", { desc = "Quickfix prev" })
+
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set("n", "<leader>/", function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
