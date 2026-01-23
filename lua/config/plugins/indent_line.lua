@@ -6,6 +6,7 @@ return {
     main = "ibl",
     opts = {},
     config = {
+      scope = { enabled = false },
       indent = {
         char = "┊",
       },

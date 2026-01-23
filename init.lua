@@ -27,7 +27,7 @@ vim.opt.timeoutlen = 300
 -- Show which line your cursor is on
 vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 30
+vim.opt.scrolloff = 10
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
