@@ -16,8 +16,9 @@ return {
     config = function()
       require("telescope").setup({
         pickers = {
-          find_files = { theme = "ivy" },
-          git_files = { theme = "ivy" },
+          find_files = { theme = "dropdown", previewer = false },
+          git_files = { theme = "dropdown", previewer = false },
+          buffers = { theme = "dropdown", previewer = false },
         },
         extensions = {
           fzf = {},
@@ -40,9 +41,10 @@ return {
 
       set("n", "<space>fh", builtin.help_tags, { desc = "Show help tags" })
       set("n", "<space>ff", builtin.find_files, { desc = "Find project files" })
-      set("n", "<space>ss", builtin.find_files, { desc = "Live Grep" })
+      set("n", "<space>ss", builtin.live_grep, { desc = "Live Grep" })
       set("n", "<space><space>", builtin.git_files, { desc = "Find GIT files" })
       set("n", "<space>en", edit_nvim_config, { desc = "Edit NeoVim config" })
+      set("n", "<space>oo", builtin.buffers, { desc = "" })
 
       set("n", "<space>]", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })
       set("n", "<space>[", vim.diagnostic.goto_prev, { desc = "Go to prev diagnostic" })

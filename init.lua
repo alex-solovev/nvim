@@ -32,6 +32,11 @@ vim.opt.scrolloff = 10
 --  See `:help hlsearch`
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
+-- Show hover documentation with rounded border
+vim.keymap.set("n", "<S-k>", function()
+  vim.lsp.buf.hover({ border = "rounded" })
+end, { desc = "" })
+
 -- Highlight on copy
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking (copying) text",
@@ -41,6 +46,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+-- Toggle inline diagnostics
 vim.keymap.set("n", "<leader>td", function()
   local config = vim.diagnostic.config().virtual_lines
   vim.diagnostic.config({ virtual_lines = not config })
