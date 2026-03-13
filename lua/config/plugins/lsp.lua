@@ -7,12 +7,12 @@ return {
       { "williamboman/mason.nvim", opts = {} },
       "williamboman/mason-lspconfig.nvim",
       -- Allows extra capabilities provided by nvim-cmp
-      "hrsh7th/cmp-nvim-lsp",
+      -- "hrsh7th/cmp-nvim-lsp",
     },
 
     config = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+      -- capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
       local lspconfig = require("lspconfig")
 
