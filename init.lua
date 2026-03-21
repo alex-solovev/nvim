@@ -34,7 +34,7 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Show hover documentation with rounded border
 vim.keymap.set("n", "<S-k>", function()
-  vim.lsp.buf.hover({ border = "rounded" })
+  vim.lsp.buf.hover({ border = "single" })
 end, { desc = "" })
 
 -- Highlight on copy
