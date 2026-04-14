@@ -1,0 +1,24 @@
+{
+  "plugins": {
+    "blink.cmp": {
+      "rev": "456d38d1cd3743926f329204c2340f3e7840aad6",
+      "src": "https://github.com/saghen/blink.cmp"
+    },
+    "koda.nvim": {
+      "rev": "18a21bcef1b6746d1aaeaae2d1ca54b46f6aa8fe",
+      "src": "https://github.com/oskarnurm/koda.nvim"
+    },
+    "nvim-lspconfig": {
+      "rev": "8a9378a822719346a0288fa004dab302ca3c0a8f",
+      "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "nvim-treesitter": {
+      "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter"
+    },
+    "oil.nvim": {
+      "rev": "0fcc83805ad11cf714a949c98c605ed717e0b83e",
+      "src": "https://github.com/stevearc/oil.nvim"
+    }
+  }
+}
