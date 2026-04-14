@@ -3,6 +3,8 @@ vim.hl = vim.highlight
 
 vim.g.mapleader = " "
 
+vim.opt.termguicolors = true
+vim.opt.smoothscroll = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
@@ -80,11 +82,16 @@ vim.opt.encoding = "utf-8"
 
 -- Install Packages
 vim.pack.add {
-  "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/neovim/nvim-lspconfig",
+  "https://github.com/mason-org/mason.nvim",
   "https://github.com/stevearc/oil.nvim",
   "https://github.com/oskarnurm/koda.nvim",
   "https://github.com/saghen/blink.cmp",
+  {
+    src="https://github.com/nvim-treesitter/nvim-treesitter",
+    branch="main",
+    build=":TSUpdate",
+  }
 }
 
 require("oil").setup()
@@ -111,12 +118,36 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- Show hover documentation with rounded border
 vim.keymap.set("n", "<S-k>", vim.lsp.buf.hover, { desc = "" })
 
+local augroup = vim.api.nvim_create_augroup("UserConfig", { clear= true })
+
 -- Highlight on copy
 vim.api.nvim_create_autocmd("TextYankPost", {
+  group = augroup,
   desc = "Highlight when yanking (copying) text",
   callback = function()
     vim.hl.on_yank()
   end,
+})
+
+-- Restore last cursor position
+vim.api.nvim_create_autocmd("BufReadPost", {
+  group = augroup,
+  desc = "Restore last cursor position",
+  callback = function()
+    if vim.o.diff then
+      return
+    end
+
+    local last_pos = vim.api.nvim_buf_get_mark(0, '"')
+    local last_line = vim.api.nvim_buf_line_count(0)
+
+    local row = last_pos[1]
+    if row < 1 or row > last_line then
+      return
+    end
+
+    pcall(vim.api.nvim_win_set_cursor, 0, last_pos)
+  end
 })
 
 -- Toggle inline diagnostics
@@ -271,3 +302,105 @@ local function setup_dynamic_statusline()
 end
 
 setup_dynamic_statusline()
+
+-- Treesitter setup
+local setup_treesitter = function()
+	local treesitter = require("nvim-treesitter")
+	treesitter.setup({})
+	local ensure_installed = {
+		"vim",
+		"vimdoc",
+		"rust",
+		"c",
+		"cpp",
+		"go",
+		"html",
+		"css",
+		"javascript",
+		"json",
+		"lua",
+		"markdown",
+		"python",
+		"typescript",
+		"vue",
+		"svelte",
+		"bash",
+	}
+
+	local config = require("nvim-treesitter.config")
+
+	local already_installed = config.get_installed()
+	local parsers_to_install = {}
+
+	for _, parser in ipairs(ensure_installed) do
+		if not vim.tbl_contains(already_installed, parser) then
+			table.insert(parsers_to_install, parser)
+		end
+	end
+
+	if #parsers_to_install > 0 then
+		treesitter.install(parsers_to_install)
+	end
+
+	local group = vim.api.nvim_create_augroup("TreeSitterConfig", { clear = true })
+	vim.api.nvim_create_autocmd("FileType", {
+		group = group,
+		callback = function(args)
+			if vim.list_contains(treesitter.get_installed(), vim.treesitter.language.get_lang(args.match)) then
+				vim.treesitter.start(args.buf)
+			end
+		end,
+	})
+end
+
+setup_treesitter()
+
+local diagnostic_signs = {
+	Error = " ",
+	Warn = " ",
+	Hint = "",
+	Info = "",
+}
+
+vim.diagnostic.config({
+	virtual_text = { prefix = "●", spacing = 4 },
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = diagnostic_signs.Error,
+			[vim.diagnostic.severity.WARN] = diagnostic_signs.Warn,
+			[vim.diagnostic.severity.INFO] = diagnostic_signs.Info,
+			[vim.diagnostic.severity.HINT] = diagnostic_signs.Hint,
+		},
+	},
+	underline = true,
+	update_in_insert = false,
+	severity_sort = true,
+	float = {
+		border = "rounded",
+		source = "always",
+		header = "",
+		prefix = "",
+		focusable = false,
+		style = "minimal",
+	},
+})
+
+do
+	local orig = vim.lsp.util.open_floating_preview
+	function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+		opts = opts or {}
+		opts.border = opts.border or "rounded"
+		return orig(contents, syntax, opts, ...)
+	end
+end
+
+-- Keymaps
+vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
+vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+
+vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
+vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
+vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
