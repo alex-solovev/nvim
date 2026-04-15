@@ -39,7 +39,7 @@ vim.opt.fillchars = { eob = " " }
 vim.opt.undofile = true
 vim.opt.showmode = false
 vim.opt.confirm = true
-vim.opt.winborder = "rounded"
+vim.opt.winborder = "single"
 
 vim.g.have_nerd_font = true
 
@@ -87,6 +87,11 @@ vim.pack.add {
   "https://github.com/stevearc/oil.nvim",
   "https://github.com/oskarnurm/koda.nvim",
   "https://github.com/saghen/blink.cmp",
+  "https://github.com/nvim-lua/plenary.nvim",
+  { src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  {
+    src = "https://github.com/nvim-telescope/telescope.nvim",
+  },
   {
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
     branch = "main",
@@ -157,7 +162,7 @@ end)
 --  See `:help hlsearch`
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
--- Show hover documentation with rounded border
+-- Show hover documentation
 vim.keymap.set("n", "<S-k>", vim.lsp.buf.hover, { desc = "" })
 
 local augroup = vim.api.nvim_create_augroup("UserConfig", { clear = true })
@@ -414,7 +419,7 @@ vim.diagnostic.config({
   update_in_insert = false,
   severity_sort = true,
   float = {
-    border = "rounded",
+    border = "single",
     source = true,
     header = "",
     prefix = "",
@@ -427,7 +432,7 @@ do
   local orig = vim.lsp.util.open_floating_preview
   function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     opts = opts or {}
-    opts.border = opts.border or "rounded"
+    opts.border = opts.border or "single"
     return orig(contents, syntax, opts, ...)
   end
 end
@@ -465,6 +470,12 @@ end
 
 vim.api.nvim_create_autocmd("LspAttach", { group = augroup, callback = lst_on_attach })
 
+-- Telescope config
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
+vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
 
 -- Keymaps
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
