@@ -12,12 +12,12 @@ vim.opt.wrap = false
 vim.opt.scrolloff = 10
 vim.opt.sidescrolloff = 10
 
-vim.opt.ignorecase = true 
+vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
-vim.opt.shiftwidth = 4 
+vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.expandtab = true
@@ -27,16 +27,16 @@ vim.opt.autoindent = true
 vim.opt.signcolumn = "yes:1"
 vim.opt.showmatch = true
 vim.opt.cmdheight = 0
-vim.opt.pumheight = 10 
-vim.opt.pumblend = 10 
-vim.opt.winblend = 10 
-vim.opt.conceallevel = 0 
-vim.opt.concealcursor = "" 
+vim.opt.pumheight = 10
+vim.opt.pumblend = 10
+vim.opt.winblend = 10
+vim.opt.conceallevel = 0
+vim.opt.concealcursor = ""
 vim.opt.lazyredraw = true
 vim.opt.synmaxcol = 300
 vim.opt.fillchars = { eob = " " }
 
-vim.opt.undofile = true 
+vim.opt.undofile = true
 vim.opt.showmode = false
 vim.opt.confirm = true
 vim.opt.winborder = "rounded"
@@ -101,6 +101,39 @@ require("blink.cmp").setup({
 
 vim.cmd.colorscheme("koda")
 vim.cmd("syntax off")
+
+vim.lsp.config("lua_ls", {
+    on_init = function(client)
+      if client.workspace_folders then
+        local path = client.workspace_folders[1].name
+        if
+          path ~= vim.fn.stdpath('config')
+          and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+        then
+          return
+        end
+      end
+
+      client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+        runtime = {
+          version = 'LuaJIT',
+          path = {
+            'lua/?.lua',
+            'lua/?/init.lua',
+          },
+        },
+        workspace = {
+          checkThirdParty = false,
+          library = {
+            vim.env.VIMRUNTIME,
+          },
+        },
+      })
+    end,
+    settings = {
+      Lua = {},
+    },
+  })
 
 vim.lsp.enable("ts_ls")
 vim.lsp.enable("lua_ls")
