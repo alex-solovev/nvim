@@ -29,7 +29,7 @@ vim.opt.showmatch = true
 vim.opt.cmdheight = 0
 vim.opt.pumheight = 10
 vim.opt.pumblend = 10
-vim.opt.winblend = 10
+-- vim.opt.winblend = 10
 vim.opt.conceallevel = 0
 vim.opt.concealcursor = ""
 vim.opt.lazyredraw = true
@@ -410,7 +410,7 @@ vim.diagnostic.config({
 	severity_sort = true,
 	float = {
 		border = "rounded",
-		source = "always",
+		source = true,
 		header = "",
 		prefix = "",
 		focusable = false,
