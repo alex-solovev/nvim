@@ -74,9 +74,9 @@ vim.opt.backspace = "indent,eol,start"
 vim.opt.autochdir = false
 vim.opt.iskeyword:append("-")
 vim.opt.path:append("**")
-vim.opt.selection = "inclusive"
+-- vim.opt.selection = "inclusive"
 vim.opt.mouse = "a"
-vim.opt.clipboard:append("unnamedplus")
+-- vim.opt.clipboard:append("unnamedplus")
 vim.opt.modifiable = true
 vim.opt.encoding = "utf-8"
 
@@ -96,7 +96,9 @@ vim.pack.add {
 
 require("mason").setup()
 require("oil").setup()
-require("blink.cmp").setup({
+local blink = require("blink.cmp")
+
+blink.setup({
   fuzzy = { implementation = "prefer_rust_with_warning" }
 })
 
@@ -137,10 +139,14 @@ vim.lsp.config("lua_ls", {
 })
 
 vim.lsp.enable("tsgo")
+vim.lsp.enable("svelte")
 vim.lsp.enable("oxfmt")
 vim.lsp.enable("oxlint")
 vim.lsp.enable("lua_ls")
 
+vim.lsp.config["*"] = {
+  capabilities = blink.get_lsp_capabilities()
+}
 
 -- Enable paste from clipboard
 vim.schedule(function()
