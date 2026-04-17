@@ -484,16 +484,27 @@ vim.api.nvim_create_autocmd("LspAttach", { group = augroup, callback = lst_on_at
 
 -- Telescope config
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
-vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+local themes = require('telescope.themes')
+vim.keymap.set('n', '<leader><leader>', function()
+  builtin.git_files(themes.get_ivy({}))
+end, { desc = 'Telescope find files' })
+vim.keymap.set('n', '<leader>ss', function()
+  builtin.live_grep(themes.get_ivy({}))
+end, { desc = 'Telescope live grep' })
+vim.keymap.set('n', '<leader>oo', function()
+  builtin.buffers(themes.get_ivy({}))
+end, { desc = 'Telescope buffers' })
+vim.keymap.set('n', '<leader>fh', function()
+  builtin.help_tags(themes.get_ivy({}))
+end, { desc = 'Telescope help tags' })
 
 -- Keymaps
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+vim.keymap.set("n", "<C-j>", ":cnext<CR>", { desc = "Next quickfix item" })
+vim.keymap.set("n", "<C-k>", ":cprev<CR>", { desc = "Prev quickfix item" })
 
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
