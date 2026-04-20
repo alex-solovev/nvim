@@ -68,7 +68,7 @@ vim.opt.redrawtime = 10000
 vim.opt.maxmempattern = 20000
 vim.opt.autoread = true -- audo reload files changed outside of nvim
 vim.opt.autowrite = false
-vim.opt.hidden = true   -- allow hidden buffers
+vim.opt.hidden = true -- allow hidden buffers
 vim.opt.errorbells = false
 vim.opt.backspace = "indent,eol,start"
 vim.opt.autochdir = false
@@ -81,10 +81,11 @@ vim.opt.modifiable = true
 vim.opt.encoding = "utf-8"
 
 -- Install Packages
-vim.pack.add {
+vim.pack.add({
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/stevearc/oil.nvim",
+  "https://github.com/stevearc/conform.nvim",
   "https://github.com/oskarnurm/koda.nvim",
   "https://github.com/saghen/blink.cmp",
   "https://github.com/nvim-lua/plenary.nvim",
@@ -96,15 +97,15 @@ vim.pack.add {
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
     branch = "main",
     build = ":TSUpdate",
-  }
-}
+  },
+})
 
 require("mason").setup()
 require("oil").setup()
 local blink = require("blink.cmp")
 
 blink.setup({
-  fuzzy = { implementation = "prefer_rust_with_warning" }
+  fuzzy = { implementation = "prefer_rust_with_warning" },
 })
 
 vim.cmd.colorscheme("koda")
@@ -115,19 +116,19 @@ vim.lsp.config("lua_ls", {
     if client.workspace_folders then
       local path = client.workspace_folders[1].name
       if
-          path ~= vim.fn.stdpath('config')
-          and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+        path ~= vim.fn.stdpath("config")
+        and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
       then
         return
       end
     end
 
-    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+    client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
       runtime = {
-        version = 'LuaJIT',
+        version = "LuaJIT",
         path = {
-          'lua/?.lua',
-          'lua/?/init.lua',
+          "lua/?.lua",
+          "lua/?/init.lua",
         },
       },
       workspace = {
@@ -150,8 +151,26 @@ vim.lsp.enable("oxlint")
 vim.lsp.enable("lua_ls")
 
 vim.lsp.config["*"] = {
-  capabilities = blink.get_lsp_capabilities()
+  capabilities = blink.get_lsp_capabilities(),
 }
+
+-- Formatting setup
+require("conform").setup({
+  formatters_by_ft = {
+    lua = { "stylua" },
+    -- TODO use vp fmt command instead
+    javascript = { "prettier", stop_after_first = true },
+    typescript = { "prettier", stop_after_first = true },
+    svelte = { "prettier", stop_after_first = true },
+  },
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*",
+  callback = function(args)
+    require("conform").format({ bufnr = args.buf })
+  end,
+})
 
 -- Enable paste from clipboard
 vim.schedule(function()
@@ -194,7 +213,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
     end
 
     pcall(vim.api.nvim_win_set_cursor, 0, last_pos)
-  end
+  end,
 })
 
 -- Toggle inline diagnostics
@@ -202,7 +221,6 @@ vim.keymap.set("n", "<leader>td", function()
   local config = vim.diagnostic.config().virtual_lines
   vim.diagnostic.config({ virtual_lines = not config })
 end, { desc = "Toggle diagnostics" })
-
 
 -- Git branch function with caching and Nerd Font icon
 local cached_branch = ""
@@ -223,28 +241,28 @@ end
 local function file_type()
   local ft = vim.bo.filetype
   local icons = {
-    lua = "\u{e620} ",        -- nf-dev-lua
-    python = "\u{e73c} ",     -- nf-dev-python
+    lua = "\u{e620} ", -- nf-dev-lua
+    python = "\u{e73c} ", -- nf-dev-python
     javascript = "\u{e74e} ", -- nf-dev-javascript
     typescript = "\u{e628} ", -- nf-dev-typescript
     javascriptreact = "\u{e7ba} ",
     typescriptreact = "\u{e7ba} ",
-    html = "\u{e736} ",     -- nf-dev-html5
-    css = "\u{e749} ",      -- nf-dev-css3
+    html = "\u{e736} ", -- nf-dev-html5
+    css = "\u{e749} ", -- nf-dev-css3
     scss = "\u{e749} ",
-    json = "\u{e60b} ",     -- nf-dev-json
+    json = "\u{e60b} ", -- nf-dev-json
     markdown = "\u{e73e} ", -- nf-dev-markdown
-    vim = "\u{e62b} ",      -- nf-dev-vim
-    sh = "\u{f489} ",       -- nf-oct-terminal
+    vim = "\u{e62b} ", -- nf-dev-vim
+    sh = "\u{f489} ", -- nf-oct-terminal
     bash = "\u{f489} ",
     zsh = "\u{f489} ",
-    rust = "\u{e7a8} ",  -- nf-dev-rust
-    go = "\u{e724} ",    -- nf-dev-go
-    c = "\u{e61e} ",     -- nf-dev-c
-    cpp = "\u{e61d} ",   -- nf-dev-cplusplus
-    java = "\u{e738} ",  -- nf-dev-java
-    php = "\u{e73d} ",   -- nf-dev-php
-    ruby = "\u{e739} ",  -- nf-dev-ruby
+    rust = "\u{e7a8} ", -- nf-dev-rust
+    go = "\u{e724} ", -- nf-dev-go
+    c = "\u{e61e} ", -- nf-dev-c
+    cpp = "\u{e61d} ", -- nf-dev-cplusplus
+    java = "\u{e738} ", -- nf-dev-java
+    php = "\u{e73d} ", -- nf-dev-php
+    ruby = "\u{e739} ", -- nf-dev-ruby
     swift = "\u{e755} ", -- nf-dev-swift
     kotlin = "\u{e634} ",
     dart = "\u{e798} ",
@@ -255,9 +273,9 @@ local function file_type()
     toml = "\u{e615} ",
     xml = "\u{f05c} ",
     dockerfile = "\u{f308} ", -- nf-linux-docker
-    gitcommit = "\u{f418} ",  -- nf-oct-git_commit
-    gitconfig = "\u{f1d3} ",  -- nf-fa-git
-    vue = "\u{fd42} ",        -- nf-md-vuejs
+    gitcommit = "\u{f418} ", -- nf-oct-git_commit
+    gitconfig = "\u{f1d3} ", -- nf-fa-git
+    vue = "\u{fd42} ", -- nf-md-vuejs
     svelte = "\u{e697} ",
     astro = "\u{e628} ",
   }
@@ -332,13 +350,13 @@ local function setup_dynamic_statusline()
         "%#StatusLineBold#",
         "%{v:lua.mode_icon()}",
         "%#StatusLine#",
-        " \u{e0b1} %f %h%m%r",  -- nf-pl-left_hard_divider
+        " \u{e0b1} %f %h%m%r", -- nf-pl-left_hard_divider
         "%{v:lua.git_branch()}",
-        "\u{e0b1} ",            -- nf-pl-left_hard_divider
+        "\u{e0b1} ", -- nf-pl-left_hard_divider
         "%{v:lua.file_type()}",
-        "\u{e0b1} ",            -- nf-pl-left_hard_divider
+        "\u{e0b1} ", -- nf-pl-left_hard_divider
         "%{v:lua.file_size()}",
-        "%=",                   -- Right-align everything after this
+        "%=", -- Right-align everything after this
         " \u{f017} %l:%c  %P ", -- nf-fa-clock_o for line/col
       })
     end,
@@ -464,7 +482,6 @@ local function lst_on_attach(event)
     vim.diagnostic.open_float({ scope = "line" })
   end, opts)
 
-
   if client:supports_method("textDocument/codeAction", bufnr) then
     vim.keymap.set("n", "<leader>oi", function()
       vim.lsp.buf.code_action({
@@ -483,20 +500,20 @@ end
 vim.api.nvim_create_autocmd("LspAttach", { group = augroup, callback = lst_on_attach })
 
 -- Telescope config
-local builtin = require('telescope.builtin')
-local themes = require('telescope.themes')
-vim.keymap.set('n', '<leader><leader>', function()
+local builtin = require("telescope.builtin")
+local themes = require("telescope.themes")
+vim.keymap.set("n", "<leader><leader>", function()
   builtin.git_files(themes.get_ivy({}))
-end, { desc = 'Telescope find files' })
-vim.keymap.set('n', '<leader>ss', function()
+end, { desc = "Telescope find files" })
+vim.keymap.set("n", "<leader>ss", function()
   builtin.live_grep(themes.get_ivy({}))
-end, { desc = 'Telescope live grep' })
-vim.keymap.set('n', '<leader>oo', function()
+end, { desc = "Telescope live grep" })
+vim.keymap.set("n", "<leader>oo", function()
   builtin.buffers(themes.get_ivy({}))
-end, { desc = 'Telescope buffers' })
-vim.keymap.set('n', '<leader>fh', function()
+end, { desc = "Telescope buffers" })
+vim.keymap.set("n", "<leader>fh", function()
   builtin.help_tags(themes.get_ivy({}))
-end, { desc = 'Telescope help tags' })
+end, { desc = "Telescope help tags" })
 
 -- Keymaps
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
