@@ -109,7 +109,7 @@ blink.setup({
 })
 
 vim.cmd.colorscheme("koda")
-vim.cmd("syntax off")
+-- vim.cmd("syntax off")
 
 vim.lsp.config("lua_ls", {
   on_init = function(client)
