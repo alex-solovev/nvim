@@ -530,3 +530,5 @@ vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
 -- Open Oil
 vim.keymap.set("n", "-", ":Oil<CR>", { desc = "Open Oil" })
+
+require("pins").setup()
