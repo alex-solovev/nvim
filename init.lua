@@ -25,7 +25,7 @@ vim.opt.smartindent = true
 vim.opt.autoindent = true
 
 vim.opt.signcolumn = "yes:1"
-vim.opt.showmatch = true
+-- vim.opt.showmatch = true
 vim.opt.cmdheight = 0
 vim.opt.pumheight = 10
 vim.opt.pumblend = 10
@@ -89,6 +89,7 @@ vim.pack.add({
   "https://github.com/oskarnurm/koda.nvim",
   "https://github.com/saghen/blink.cmp",
   "https://github.com/nvim-lua/plenary.nvim",
+  "https://github.com/lewis6991/gitsigns.nvim",
   { src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   {
     src = "https://github.com/nvim-telescope/telescope.nvim",
@@ -144,11 +145,17 @@ vim.lsp.config("lua_ls", {
   },
 })
 
-vim.lsp.enable("tsgo")
+vim.lsp.enable("tsc")
+vim.lsp.enable("css-lsp")
+vim.lsp.enable("superhtml")
 vim.lsp.enable("svelte")
 vim.lsp.enable("oxfmt")
 vim.lsp.enable("oxlint")
 vim.lsp.enable("lua_ls")
+
+vim.lsp.config("tsc", {
+  cmd = { "tsc", "--lsp", "--stdio" },
+})
 
 vim.lsp.config["*"] = {
   capabilities = blink.get_lsp_capabilities(),
@@ -157,6 +164,8 @@ vim.lsp.config["*"] = {
 -- Formatting setup
 require("conform").setup({
   formatters_by_ft = {
+    css = { "prettier" },
+    html = { "superhtml" },
     lua = { "stylua" },
     -- TODO use vp fmt command instead
     javascript = { "prettier", stop_after_first = true },

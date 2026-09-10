@@ -8,6 +8,10 @@
       "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
       "src": "https://github.com/stevearc/conform.nvim"
     },
+    "gitsigns.nvim": {
+      "rev": "5be654f2232c10ddcad19c1607a67b6b4b78fc29",
+      "src": "https://github.com/lewis6991/gitsigns.nvim"
+    },
     "koda.nvim": {
       "rev": "18a21bcef1b6746d1aaeaae2d1ca54b46f6aa8fe",
       "src": "https://github.com/oskarnurm/koda.nvim"
