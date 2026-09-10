@@ -32,7 +32,7 @@ vim.opt.pumblend = 10
 -- vim.opt.winblend = 10
 vim.opt.conceallevel = 0
 vim.opt.concealcursor = ""
-vim.opt.lazyredraw = true
+vim.opt.lazyredraw = false
 vim.opt.synmaxcol = 300
 vim.opt.fillchars = { eob = " " }
 
@@ -47,7 +47,7 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 
 -- Folding (requires treesitter)
-vim.opt.foldmethod = "expr"
+vim.opt.foldmethod = "manual"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldlevel = 99
 
@@ -64,7 +64,7 @@ vim.opt.undofile = true
 vim.opt.undodir = undodir
 vim.opt.updatetime = 300
 vim.opt.timeoutlen = 500
-vim.opt.redrawtime = 10000
+vim.opt.redrawtime = 1000
 vim.opt.maxmempattern = 20000
 vim.opt.autoread = true -- audo reload files changed outside of nvim
 vim.opt.autowrite = false
